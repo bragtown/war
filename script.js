@@ -30,24 +30,85 @@ $(document).ready(function() {
 	
 	//shuffle the deck
 	
+	deck = _.shuffle(deck);
+	
 	
 	var cards_player_1 = [];
 	var cards_player_2 = [];
 	//divide out the cards into the two arrays
-	
-	
-	//create a function (algorithm) called "war" that takes two cards as parameters, compares them and returns a winner. A tie should return false.
-	function war() {
+	for (var i = 0; i < deck.length; i++){
+		if (i < 26){
+		cards_player_1.push(deck[i]);
+		}
+		else{
+		cards_player_2.push(deck[i]);	
+		}
 	}
-	
-	
+	console.log(cards_player_2);
+	//create a function (algorithm) called "war" that takes two cards as parameters, compares them and returns a winner. A tie should return false.
+	function war(player1, player2) {
+		if (player1.number > player2.number){
+			return player1;
+		}
+		if (player2.number > player1.number){
+			return player2;			
+		}
+		else{
+			return false;
+		}
+	}
+	function player1Shift(){
+		var temp = cards_player_2.shift();
+		cards_player_1.push(temp);
+		var temp2 = cards_player_1.shift();
+		cards_player_1.push(temp2);
+	}
+	function player2Shift(){
+		var temp = cards_player_1.shift();
+		cards_player_2.push(temp);
+		var temp2 = cards_player_2.shift();
+		cards_player_2.push(temp2);
+	}
 	//create a play function
 		//compare the cards
 		//give the winner both cards (at end of deck)
 	function play() {
-		
+		var winner = war(cards_player_1[0], cards_player_2[0]);
+		if (winner === cards_player_1[0]){
+			player1Shift();
+		}
+		if (winner === cards_player_2[0]){
+			player2Shift();
+		}
+		else{
+			var cardsAtWar = 4
+			while(cards_player_1.length > cardsAtWar || cards_player_2.length > cardsAtWar){
+
+				var warWinner = war(cards_player_1[cardsAtWar], cards_player_2[cardsAtWar]);
+				console.log(cardsAtWar);
+
+				if (warWinner === cards_player_1[4]){
+					for (var i = 0; i < cardsAtWar; i++){
+						player1Shift();
+					}
+				}
+				if (warWinner === cards_player_2[4]){
+					for (var i = 0; i < cardsAtWar; i++){
+						player2Shift();
+					}
+				}
+				else{
+					cardsAtWar += 4;
+				}
+			}
+
+
+
+		}
+
 		//this function (defined below) will continue to the next turn
 		advance();
+		
 	}
 	
 	function advance() {
